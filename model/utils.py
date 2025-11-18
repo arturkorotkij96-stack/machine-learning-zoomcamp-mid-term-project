@@ -1,12 +1,9 @@
-
-
-
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
-from midterm_project.conf import FILE_PATH, Y_COL, Y_COL_RAW
+from model.conf import FILE_PATH, N_JOBS, Y_COL, Y_COL_RAW
 
 
 def prepate_data():
@@ -14,15 +11,14 @@ def prepate_data():
     Load csv file to df, fillna and split df to train/validate/test 60/20/20
     """
     df = pd.read_csv(FILE_PATH)
-    # df = df[df["body"].str.len()> 100]
     df[Y_COL_RAW] = pd.to_numeric(df[Y_COL_RAW], errors="coerce")
     df = df[df[Y_COL_RAW].notna()]
-    # df = df[[col for col in df.columns if col.startswith("berd")] + ["score"]]
-    # df = df.sample(n=20000, random_state=42)
+
     # Target variable -> comment was upvoted
     df[Y_COL] = df[Y_COL_RAW] > 0
     del df[Y_COL_RAW]
     del df["ups"]
+
     categorical_features = df.columns[df.dtypes == "object"].to_list()
     # We are not interested in categorical columns for our case (all features we retrieved are numerical)
     df = df.drop(columns=categorical_features)
@@ -64,4 +60,4 @@ def train_model(X_train, Y_train, X_val, Y_val, model):
     y_pred = model.predict_proba(X_val)[:, 1]
     auc = roc_auc_score(Y_val, y_pred)
 
-    return auc
+    return model, auc

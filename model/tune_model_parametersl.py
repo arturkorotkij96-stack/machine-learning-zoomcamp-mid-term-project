@@ -12,8 +12,8 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier, export_text
 
-from midterm_project.utils import prepate_data, split_feature_and_target, train_model
-from midterm_project.conf import FILE_PATH, Y_COL, Y_COL_RAW
+from model.utils import prepate_data, split_feature_and_target, train_model
+from model.conf import FILE_PATH, Y_COL, Y_COL_RAW
 
 N_JOBS = 10
 def grid_search(X_full_train, Y_full_train, estimator, param_grid, model_name: str = "_"):
@@ -42,6 +42,7 @@ def grid_search(X_full_train, Y_full_train, estimator, param_grid, model_name: s
     best_auc_score = grid_search.best_score_
 
     return best_rf_model, best_params, best_auc_score
+
 
 def fit_logistic_regression_model(X_full_train, Y_full_train):
     param_grid = {
